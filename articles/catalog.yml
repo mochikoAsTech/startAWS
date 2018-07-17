@@ -1,0 +1,17 @@
+PREDEF:
+# はじめに
+  - introduction.re
+
+CHAPS:
+# AWSとは
+  - aws.re
+
+APPENDIX:
+# 何か付録があれば
+  - cantSayTightlytwinkle.re
+
+POSTDEF:
+# あとがき
+  - postscript.re
+# 執筆者一覧
+  - contributors.re

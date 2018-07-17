@@ -1,0 +1,7 @@
+node_modules
+Gemfile.lock
+*.pdf
+# レビューの間のみPDFも管理対象にする
+!articles/startAWS.pdf
+
+articles/*.html
