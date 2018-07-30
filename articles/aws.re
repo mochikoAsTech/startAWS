@@ -373,16 +373,24 @@ REX案件で使っているIDCFクラウド、などなどAWS以外にもたく�
 == CroudTrail
 == SecurityGroup
 == VPC
-== AMI
 == EC2
 === SSHの鍵認証
 === 鍵の変換
 === ElasticIP
 === Bastion
+
+= サーバのバックアップを取っておこう
+== AMI
+
+= ELBでバランシングやサーバの台数を管理しよう
 == ELB
+== Auto Scaling
+=== スケーリングに使える
+=== サーバが1台死んでも自動で1台立ち上がる
 
 = DBサーバを立てよう
 == RDS
+== Amazon Aurora
 
 = ネームサーバの設定をしよう
 == Route53
