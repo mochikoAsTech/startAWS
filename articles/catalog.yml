@@ -1,10 +1,14 @@
+
 PREDEF:
 # はじめに
   - introduction.re
 
 CHAPS:
-# AWSとは
-  - aws.re
+# インフラとサーバってなに？
+  - infraAndServer.re
+
+# AWSにログインしてみよう
+  - loginAWS.re
 
 APPENDIX:
 # 何か付録があれば
