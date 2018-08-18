@@ -7,11 +7,14 @@ CHAPS:
 # インフラとサーバってなに？
   - infraAndServer.re
 
-# AWSにログインしてみよう
-  - loginAWS.re
+# AWSを使い始めたら最初にやること
+  - doTheFirst.re
+
+# AWSでウェブサーバを立てよう
+  - serverBuilding.re
 
 APPENDIX:
-# 何か付録があれば
+# ぎゅっと言えないトゥインクル
   - cantSayTightlytwinkle.re
 
 POSTDEF:
