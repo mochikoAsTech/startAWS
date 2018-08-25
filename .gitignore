@@ -5,3 +5,7 @@ Gemfile.lock
 !articles/startAWS.pdf
 
 articles/*.html
+
+*.swp
+*.*.swp
+.DS_Store
