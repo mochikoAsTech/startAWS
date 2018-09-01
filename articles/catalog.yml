@@ -13,6 +13,27 @@ CHAPS:
 # AWSでウェブサーバを立てよう
   - serverBuilding.re
 
+# サーバのバックアップを取っておこう
+  - backup.re
+
+# ELBでバランシングやサーバの台数を管理しよう
+  - balancing.re
+
+# DBサーバを立てよう
+  - database.re
+
+# ネームサーバの設定をしよう
+  - nameServer.re
+
+# もっとAWSについて勉強したい！
+  - andMore.re
+
+# AWSをやめたくなったらすること
+  - closing.re
+
+# 寄稿
+#  - startTechBookFest.re
+
 APPENDIX:
 # ぎゅっと言えないトゥインクル
   - cantSayTightlytwinkle.re
