@@ -13,11 +13,12 @@ mochikoAsTech
 
 == Special Thanks:
 
- * ブロッコリー好きな茶色い猫に捧ぐ
+ * ブロッコリーが好きな茶色い猫に捧ぐ
 
 === レビュアー
 
- * 
+ * Takeshi Matsuba
+ * 深澤俊
 
 === 参考書
 

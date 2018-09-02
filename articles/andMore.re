@@ -1,6 +1,6 @@
 = もっとAWSについて勉強したい！
 
-本著を読んでもっとAWSについて勉強したくなったあなたにお勧めの資料を紹介します。
+本著を読んでもっとAWSやLinuxについて勉強したくなったあなたにお勧めの資料を紹介します。
 
 //pagebreak
 
@@ -24,3 +24,18 @@ AWSには公式の認定資格（@<img>{AWSCertificationRoadmap}）@<fn>{officia
 //footnote[officialRoadmap][AWS認定より引用。 @<href>{https://aws.amazon.com/jp/certification/}]
 
 認定資格に挑戦することでAWSの主要なサービスやセキュリティの基本、料金体系などをまんべんなく学ぶことができます。本著を読んで「もっとAWSについて勉強したいな！」と思ったらチャレンジしてみてはいかがでしょうか？
+
+== Linuxやコマンドも学びたいなら
+
+AWSに限らずLinuxやコマンドについてもっと学びたいときは「Linux教科書 LPICレベル1」@<fn>{lpic}という本がお勧めです。こちらはLPICという資格試験の教科書なのですが、Linuxの基礎的な内容を網羅しているので私も何かあるとこの本をすぐに開いて確認しています。
+
+//footnote[lpic][@<href>{https://www.amazon.co.jp/dp/4798141917}]
+
+難しい内容だと挫折してしまいそう・・・という人には「まんがでわかるLinux シス管系女子」@<fn>{adminGirl}がお勧めです。Linuxなんてまったく分からないど素人なのにシステム部に配属されてしまった「みんとちゃん」が、素朴な疑問をどんどん先輩にぶつけてくれるので、初心者の「それが知りたかった！」という内容が詰まっています。
+
+//footnote[adminGirl][@<href>{https://system-admin-girl.com/}]
+
+旬な内容なら雑誌のSoftware Design@<fn>{sd}やWEB+DB PRESS@<fn>{webdb}がお勧めです。特に4月ごろは「新人のためのLinux入門」や「Web開発 基礎の基礎」など、新人向けのとっつきやすい記事が多いのでバックナンバーを探してみてください。
+
+//footnote[sd][@<href>{https://gihyo.jp/magazine/SD}]
+//footnote[webdb][@<href>{https://gihyo.jp/magazine/SD}]

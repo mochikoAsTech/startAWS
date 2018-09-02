@@ -10,20 +10,23 @@ CHAPS:
 # AWSを使い始めたら最初にやること
   - doTheFirst.re
 
-# AWSでウェブサーバを立てよう
+# AWSでサーバを立てよう
   - serverBuilding.re
+
+# ウェブサーバの設定をしよう
+  - apacheSetting.re
 
 # サーバのバックアップを取っておこう
   - backup.re
 
-# ELBでバランシングやサーバの台数を管理しよう
+# ELBでバランシングやサーバの台数管理をしよう
   - balancing.re
 
 # DBサーバを立てよう
   - database.re
 
-# ネームサーバの設定をしよう
-  - nameServer.re
+# WordPressでサイトを作ろう
+  - wordPress.re
 
 # もっとAWSについて勉強したい！
   - andMore.re
