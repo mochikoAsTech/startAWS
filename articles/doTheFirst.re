@@ -231,7 +231,9 @@ IAMではグループを作成して、そのグループに対して権限を�
 
 続いて手順2の「ポリシーのアタッチ」でグループに対してポリシーを紐付けます。なんだかものすごくたくさん並んでいますが、それぞれ「どのサービスでどんな操作を許可する」というポリシー（方針）ですので、そこから必要なポリシーを選択してグループにアタッチ（紐付け）していきます。
 
-たくさんあるのでここでは2つだけ紹介します。先ほどのルートユーザーと同様に何でもできる1番権限の強いポリシーが「AdministratorAccess」です。そして「AdministratorAccess」からIAMに関する権限だけを引いたのが「PowerUserAccess」という、2番目に権限の強いポリシーです。
+たくさんあるのでここでは2つだけ紹介します。先ほどのルートユーザーほどではありません@<fn>{rootUser}が1番権限の強いポリシーが「AdministratorAccess」です。そして「AdministratorAccess」からIAMに関する権限だけを引いたのが「PowerUserAccess」という2番目に権限の強いポリシーです。
+
+//footnote[rootUser][もっとも権限の強い「AdministratorAccess」でもデフォルト設定では請求情報にはアクセスできません。またAWSアカウントの解約などもルートユーザーでなければ行えません。]
 
 本来は必要最小限の権限だけを付与するべきですが、今回は細かな設定はせずにこの1番強力な「AdministratorAccess」というポリシーを「start-aws-group」にアタッチします。@<fn>{administratorAccess}フィルターに「AdministratorAccess」と入力して、下に表示された「AdministratorAccess」にチェックを入れたら、右下の「次のステップ」をクリック（@<img>{addGroupStep2}）してください。
 

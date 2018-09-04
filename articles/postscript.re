@@ -19,7 +19,3 @@ mochikoAsTech
 
  * Takeshi Matsuba
  * 深澤俊
-
-=== 参考書
-
- * 

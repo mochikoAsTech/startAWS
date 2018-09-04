@@ -10,6 +10,10 @@ imports:
 rules:
   - expected: asm.js
     pattern:  ams.js
+  - expected: 今まで
+    pattern:  いままで
+  - expected: Amazon
+    pattern:  アマゾン
   - expected: 本章
     pattern:  本記事
   - expected: 本著
