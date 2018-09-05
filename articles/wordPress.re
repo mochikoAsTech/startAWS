@@ -304,7 +304,7 @@ Syntax OK
 //image[startaws127][管理画面が「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになった][scale=0.8]{
 //}
 
-//image[startaws127][正しいユーザー名とパスワードを入れないと「Unauthorized」と表示されて管理画面に入れない][scale=0.8]{
+//image[startaws128][正しいユーザー名とパスワードを入れないと「Unauthorized」と表示されて管理画面に入れない][scale=0.8]{
 //}
 
 以上でWordPressのインストールは完了です。お疲れさまでした。
