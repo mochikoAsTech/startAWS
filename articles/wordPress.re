@@ -440,26 +440,29 @@ WordPressでアップした画像を保存しておくための「バケット�
 //image[startaws156][タイトルを入力したら「メディアを追加」をクリック][scale=0.8]{
 //}
 
-「ファイルを選択」をクリックして適当な画像を選択したら「投稿に挿入」をクリックします。
+「ファイルを選択」をクリック（@<img>{startaws157}）して適当な画像を選択したら「投稿に挿入」をクリックします。
 
 //image[startaws157][適当な画像を選択したら「投稿に挿入」をクリック][scale=0.8]{
 //}
 
-「公開」をクリックします。
+「公開」をクリック（@<img>{startaws158}）します。
 
 //image[startaws158][「公開」をクリック][scale=0.8]{
 //}
 
-投稿が公開されたら「投稿を表示」をクリックしてください。
+投稿が公開されたら「投稿を表示」をクリック（@<img>{startaws159}）してください。
 
 //image[startaws159][「投稿を表示」をクリック][scale=0.8]{
 //}
 
-記事を確認したら画像を右クリックして「画像だけを表示」をクリックします。
+記事を確認したら画像を右クリックして「画像だけを表示」をクリック（@<img>{startaws160}）します。
 
 //image[startaws160][画像を右クリックして「画像だけを表示」をクリック][scale=0.8]{
 //}
 
-すると画像のURLが「@<href>{https://s3-ap-northeast-1.amazonaws.com/start-aws-wordpress-bucket/wp-content/uploads/2018/09/07182149/circle_cut_color.png}」のようになっているので、WordPressでアップした画像がS3に保存されて記事に挿入されていることが分かります。
+すると画像のURLが「@<href>{https://s3-ap-northeast-1.amazonaws.com/start-aws-wordpress-bucket/wp-content/uploads/2018/09/07182149/circle_cut_color.png}」のようになっている（@<img>{startaws161}）ので、WordPressでアップした画像がS3に保存されて記事に挿入されていることが分かります。
+
+//image[startaws161][画像のURLがS3になっている][scale=0.8]{
+//}
 
 以上でWordPressのインストールと設定は完了です。お疲れさまでした。
