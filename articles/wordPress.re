@@ -1,7 +1,7 @@
 = WordPressでサイトを作ろう
 
 この章ではWordPressをインストールしてウェブサイトを作ります。
-大変な道のりでしたがいよいよおしゃれなサイトがお目見えですよ！
+大変な道のりでしたがいよいよおしゃれなサイトがお目見えです！
 
 //pagebreak
 
@@ -17,7 +17,7 @@ ssh ec2-user@login.自分のドメイン名 -i ~/Desktop/start-aws-keypair.pem
 
 === WordPressをダウンロード
 
-先ずはcurlコマンドを使って最新のWordPressをダウンロードしましょう。curlコマンドは何もオプションをつけないと結果をそのまま画面に出力しますが、-Oオプションを付けるとファイルとして保存してくれます。
+先ずはcurlコマンドを使って最新のWordPress（@<href>{https://wordpress.org/latest.tar.gz}）をダウンロードしましょう。curlコマンドは何もオプションをつけないと結果をそのまま画面に出力しますが、-Oオプションを付けるとファイルとして保存してくれます。
 
 //cmd{
 $ curl -O https://wordpress.org/latest.tar.gz
@@ -36,11 +36,11 @@ $ ls -lh /home/ec2-user/
 
 圧縮された最新版のWordPress（latest.tar.gz）をダウンロードできました。
 
-=== インストールは展開するだけ
+=== 展開してドキュメントルートに設置
 
-実はWordPressのインストールと言っても、先ほどダウンロードしてきた圧縮ファイルをドキュメントルートで展開して、後はブラウザでぽちぽちと進めていくだけなので簡単です。
+実はWordPressのインストールと言っても、先ほどダウンロードしてきた圧縮ファイルを展開してドキュメントルートに置き、後はブラウザでぽちぽちと進めていくだけなので簡単です。
 
-それではtarコマンドを使ってWordPressの圧縮ファイル（latest.tar.gz）を展開します。lsコマンドで確認すると、展開によってwordpressというディレクトリができていることがわかります。
+それでは圧縮・解凍ソフトのようなtarコマンドを使ってWordPressの圧縮ファイル（latest.tar.gz）を展開します。lsコマンドで確認すると、展開によってwordpressというディレクトリができていることがわかります。
 
 //cmd{
 $ tar -xzf /home/ec2-user/latest.tar.gz
@@ -54,7 +54,7 @@ drwxr-xr-x 5 ec2-user ec2-user 4.0K  8月  3 05:39 wordpress
 展開できたらwordpressディレクトリの中身をすべてドキュメントルートに移動させましょう。特にいちばん後ろのスラッシュは書き忘れないように注意してください。
 
 //cmd{
-$ sudo mv wordpress/* /var/www/start-aws-documentroot/
+$ sudo mv /home/ec2-user/wordpress/* /var/www/start-aws-documentroot/
 //}
 
 今後、WordPressの管理画面から画像ファイルをアップしたり、プラグインをインストールしたりするためには、ドキュメントルート以下のファイルやディレクトリに対してapacheユーザが権限を持っていないといけません。chownコマンド@<fn>{chown}でドキュメントルート以下のオーナー（持ち主）をapacheユーザに変更しておきましょう。
@@ -134,7 +134,7 @@ drwxr-xr-x 18 apache apache  12K  8月  3 05:39 wp-includes
 //image[startaws115][「インストール実行」をクリック][scale=0.8]{
 //}
 
-「WordPressの有名な5分間インストールプロセスへようこそ!」と表示（@<img>{startaws116}）されたら、サイトのタイトルなどを入力します。サイトのタイトルは好きなものにしてください。ユーザー名やパスワードはWordPressの管理画面にログインするときに使用しますのであなた自身で決めてメモ（@<table>{wpAdminMemo}）しておいてください。「検索エンジンでの表示」はどちらでも構いませんが、Googleなどの検索結果にこのサイトを表示したくなければチェックを入れておきましょう。もしパスワードを忘れてしまった場合、ここに書いたメールアドレス宛てにパスワードリセットのメールが届きますのでメールアドレスは正確に入力してください。すべて入力したら「WordPressをインストール」をクリックします。
+「WordPressの有名な5分間インストールプロセスへようこそ!」と表示（@<img>{startaws116}）されたら、サイトのタイトルなどを入力します。サイトのタイトルは好きなものにしてください。ユーザー名やパスワードはWordPressの管理画面にログインするときに使用しますのであなた自身で決めてメモ（@<table>{wpAdminMemo}）しておいてください。「検索エンジンでの表示」はどちらでも構いませんが、作ったサイトをGoogleなどの検索結果に表示したくなければチェックを入れておきましょう。もしパスワードを忘れてしまった場合、ここに書いたメールアドレス宛てにパスワードリセットのメールが届きますのでメールアドレスは正確に入力してください。すべて入力したら「WordPressをインストール」をクリックします。
 
 //table[wpAdminMemo][WordPress管理画面に入るための情報をメモ]{
 ------------------------------------
@@ -163,7 +163,7 @@ WordPressの管理画面に入るため、先ほど設定したユーザー名�
 //image[startaws119][「更新」に赤いマークがついていたら「更新」をクリック][scale=0.8]{
 //}
 
-「WordPress の新しいバージョンがあります。」と表示されていますので「今すぐ更新」をクリック（@<img>{startaws120}）します。
+「WordPress の新しいバージョンがあります。」と表示されていますので「今すぐ更新」をクリック（@<img>{startaws120}）します。@<fn>{security}
 
 //footnote[security][脆弱性（脆弱性）とは悪用が可能なバグや設定不備のことです。もしWordPressに脆弱性が見つかって修正された新しいバージョンのWordPressが公開されたとしても、あなたが更新をしないとウェブサイトは脆弱性がある危険な状態のままで放置されていることになります。古いバージョンのWordPressを使っているとサイトを改ざんしてウイルスをばらまかれたりデータベースの個人情報を盗まれたりする可能性もありますので、新しいバージョンが出たらきちんと更新しましょう。]
 
@@ -201,7 +201,7 @@ rootになったら先ずはhtdigestコマンドを使ってダイジェスト�
 # htdigest -c /etc/httpd/conf/htdigest wp-admin-area start-aws-digest-user
 //}
 
-「New password:」と表示されたら「start-aws-digest-password」と入力してEnterキーを押してください。再度「Re-type new password:」とパスワードを求められますので、再び「start-aws-digest-password」と入力してEnterキーを押します。
+「New password:」と表示されたら「start-aws-digest-password」と入力してEnterキーを押してください。再度「Re-type new password:」とパスワードを求められますので、もう一度「start-aws-digest-password」と入力してEnterキーを押します。
 
 //cmd{
 New password:
@@ -299,12 +299,12 @@ Syntax OK
 パスワード	start-aws-digest-password
 //}
 
-正しいユーザー名とパスワードを入れれば管理画面に入るためのログイン画面（もしくは管理画面）が表示（@<img>{startaws127}）されますが、間違ったものを入力すると「Unauthorized」と表示されて管理画面には入れません。これで管理画面は「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになりました。
-
-//image[startaws127][管理画面が「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになった][scale=0.8]{
-//}
+正しいユーザー名とパスワードを入れれば管理画面に入るためのログイン画面（もしくは管理画面）が表示（@<img>{startaws127}）されますが、間違ったものを入力すると「Unauthorized」と表示（@<img>{startaws128}）されて管理画面には入れません。これで管理画面は「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになりました。
 
 //image[startaws128][正しいユーザー名とパスワードを入れないと「Unauthorized」と表示されて管理画面に入れない][scale=0.8]{
+//}
+
+//image[startaws127][管理画面が「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになった][scale=0.8]{
 //}
 
 以上でWordPressのインストールは完了です。お疲れさまでした。

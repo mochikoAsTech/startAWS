@@ -7,12 +7,12 @@ Apacheでバーチャルホストを作ってWordPressのサイトを表示し�
 
 == ウェルカムページを見てみよう
 
-@<chapref>{serverBuilding}でサーバにApacheをインストールしました。インストールしただけでまだ何の設定もしていませんが、ウェルカムページと呼ばれるデフォルトのページが見られるはずです。しかしブラウザで「http://login.自分のドメイン/」を開いてウェルカムページを見ようとしたところ、「ページ読み込みエラー 接続がタイムアウトしました」「このサイトにアクセスできません。login.自分のドメイン からの応答時間が長すぎます。」といったエラーメッセージが表示（@<img>{startaws57}）されてページを見ることはできませんでした。
+@<chapref>{serverBuilding}でサーバにApacheをインストールしました。インストールしただけでまだ何の設定もしていませんが、ウェルカムページと呼ばれるデフォルトのページが見られるはずです。しかしブラウザで「@<href>{http://login.自分のドメイン/}」を開いてウェルカムページを見ようとしたところ、「ページ読み込みエラー 接続がタイムアウトしました」「このサイトにアクセスできません。login.自分のドメイン からの応答時間が長すぎます。」といったエラーメッセージが表示（@<img>{startaws57}）されてページを見ることはできませんでした。
 
-//image[startaws57][http://login.自分のドメイン/ が見られなかった][scale=0.8]{
+//image[startaws57][@<href>{http://login.自分のドメイン/}が見られなかった][scale=0.8]{
 //}
 
-これはインスタンスの手前に居るセキュリティグループ@<fn>{securityGroup}が「SSH（ポート番号22番）の通信しか通さない」という設定になっていて、HTTP（ポート番号80番）のリクエストを遮断していることが原因です。ポート番号とは、セキュリティグループという防火壁やサーバという家についているドアのようなものだと思ってください。同じサーバを訪問するときでもSSHは22番のドアを通るし、HTTPは80番のドアを通るし、HTTPSは443番のドアを通ります。
+これはインスタンスの手前に居るセキュリティグループ@<fn>{securityGroup}が「SSH（ポート番号22番）の通信しか通さない」という設定になっていて、HTTP（ポート番号80番）のリクエストをすべて遮断していることが原因です。@<ttb>{ポート番号とはサーバという家や、その手前にあるセキュリティグループという壁についているドア}のようなものだと思ってください。同じサーバを訪問するときでもSSHは22番のドアを、HTTPは80番のドアを、HTTPSは443番のドアを通ります。
 
 //footnote[securityGroup][セキュリティグループはいわゆる「ファイアウォール」のことです。セキュリティグループってどんなものだったっけ？という方は@<chapref>{serverBuilding}でEC2のインスタンスを作るとき「ステップ6」で設定したことを思い出してください。]
 
@@ -23,12 +23,14 @@ Apacheでバーチャルホストを作ってWordPressのサイトを表示し�
 //image[startaws58][サービス＞コンピューティング＞EC2][scale=0.8]{
 //}
 
-「EC2」をクリックすると、EC2ダッシュボード（@<img>{startaws59}）が表示されます。左メニューの「セキュリティグループ」をクリックしてください。「ec2-security-group」をクリックして「インバウンド」タブを見ると、現状は通信を許可する対象に「SSH（ポート番号22番）」しか含まれていません。「インバウンド」タブの「編集」をクリックします。
+「EC2」をクリックすると、EC2ダッシュボード（@<img>{startaws59}）が表示されます。左メニューの「セキュリティグループ」をクリックしてください。
 
-//image[startaws59][EC2ダッシュボードで「セキュリティグループ」をクリック][scale=0.8]{
+//image[startaws59][現状はSSH（ポート番号22番）しか通れないので「インバウンド」タブの「編集」をクリック][scale=0.8]{
 //}
 
-「ルールの追加」をクリックしたらタイプは「HTTP」を選択（@<img>{startaws60}）します。ソースが「カスタム」になり「0.0.0.0/0, ::/0」と入力されるので、カンマから後ろを消して「0.0.0.0/0」にしてください。入力できたら「保存」をクリックします。
+「ec2-security-group」をクリックして「インバウンド」タブを見ると、現状は通信を許可する対象に「SSH（ポート番号22番）」しか含まれていません。「インバウンド」タブの「編集」をクリックします。
+
+「ルールの追加」をクリックしたらタイプは「HTTP」を選択（@<img>{startaws60}）します。ソースが「カスタム」になり「0.0.0.0/0, ::/0」と自動入力されるので、カンマから後ろを消して「0.0.0.0/0」にしてください。入力できたら「保存」をクリックします。
 
 //image[startaws60][タイプは「HTTP」、ソースは「0.0.0.0/0」にして「保存」をクリック][scale=0.8]{
 //}
@@ -38,7 +40,7 @@ Apacheでバーチャルホストを作ってWordPressのサイトを表示し�
 //image[startaws61][「インバウンド」タブでHTTPが追加されていたら穴あけ完了][scale=0.8]{
 //}
 
-もう一度ブラウザで「http://login.自分のドメイン/」を開いてみましょう。「Amazon Linux AMI Test Page」と書かれたウェルカムページが表示（@<img>{startaws62}）されるはずです。
+もう一度ブラウザで「@<href>{http://login.自分のドメイン/}」を開いてみましょう。「Amazon Linux AMI Test Page」と書かれたウェルカムページが表示（@<img>{startaws62}）されるはずです。
 
 //image[startaws62][Amazon Linux AMI Test Pageが表示された][scale=0.8]{
 //}
@@ -59,7 +61,7 @@ AWSなら1台立てるのもあっという間ですが、@<chapref>{infraAndSer
 
 //footnote[virtualHost][マンションの建物（ホストサーバ）の中に101号室や102号室などの各戸（仮想サーバ）があり、その中にはそれぞれ子供部屋や書斎や居間などの部屋（バーチャルホスト）がある、という例えなら分かりやすいでしょうか。]
 
-今はApacheにこの「バーチャルホスト」という機能があるので、1台のサーバ上で2つ以上のウェブサイトを同居させることができます。
+Apacheにはこの「バーチャルホスト」という機能があるので、1台のサーバ上で2つ以上のウェブサイトを同居させることができます。
 
 === バーチャルホストを設定しよう
 
@@ -88,14 +90,18 @@ Apacheの大本となる設定ファイルは「/etc/httpd/conf/httpd.conf」で
 
 //cmd{
 # tail -5 /etc/httpd/conf/httpd.conf
+//}
 
-# Supplemental configuration
-#
-# Load config files in the "/etc/httpd/conf.d" directory, if any.
+//image[startaws143][tailコマンドでhttpd.confの最後の5行を見てみよう][scale=0.8]{
+//}
+
+すると最後の行に
+
+//cmd{
 IncludeOptional conf.d/*.conf
 //}
 
-大本の設定ファイルの中で、さらに「conf.d」というディレクトリに中にある「*.conf」というファイルをインクルード（取り込み）@<fn>{includeOptional}していることが分かります。でもいきなり「conf.d/*.conf」と書かれても「3丁目」とだけ書かれた住所のようなもので、どこの「conf.d/*.conf」を指しているのかよく分かりませんよね。「conf.d」より上のディレクトリはどこで指定しているのか、grepという検索のコマンドで探してみましょう。
+とあるため大本の設定ファイルの中で、さらに「conf.d」というディレクトリ内の「*.conf」というファイルをインクルード（取り込み）@<fn>{includeOptional}していることが分かります。でもいきなり「conf.d/*.conf」と書かれても「3丁目」とだけ書かれた住所のようなもので、どこの「conf.d/*.conf」を指しているのかよく分かりませんよね。「conf.d」より上のディレクトリはどこで指定しているのか、grepという検索のコマンドで探してみましょう。
 
 //footnote[includeOptional][IncludeディレクティブやIncludeOptionalディレクティブについては@<href>{https://httpd.apache.org/docs/2.4/ja/mod/core.html#include}を参照。]
 
@@ -104,13 +110,15 @@ IncludeOptional conf.d/*.conf
 ServerRoot "/etc/httpd"
 //}
 
-ServerRoot@<fn>{serverRoot}ではベースとなるディレクトリを指定しています。これで「conf.d/*.conf」は実際は「/etc/httpd/conf.d/*.conf」であることが分かりました。
+ServerRoot@<fn>{serverRoot}ではベースとなるディレクトリを指定しています。これで「conf.d/*.conf」が実際は「/etc/httpd/conf.d/*.conf」であることが分かりました。
 
 //footnote[serverRoot][ServerRootディレクティブについては@<href>{https://httpd.apache.org/docs/2.4/ja/mod/core.html#serverroot}を参照。]
 
 では自分のドメインのサイト用にバーチャルホストを「/etc/httpd/conf.d」の下で作成してみましょう。viコマンドで新しい設定ファイルを作ります。
 
+//cmd{
 # vi /etc/httpd/conf.d/start-aws-virtualhost.conf
+//}
 
 こんな画面（@<img>{startaws64}）で「"/etc/httpd/conf.d/start-aws-virtualhost.conf" [New File]」と表示されましたか？
 
@@ -145,7 +153,7 @@ ServerRoot@<fn>{serverRoot}ではベースとなるディレクトリを指定�
 
 「閲覧モード」に戻ったら「:wq」と入力してEnterキーを押せば保存されます。（@<img>{startaws67}）
 
-//image[startaws67][ESCを押すと左下の「-- INSERT --」が消えて再び「閲覧モード」になる][scale=0.8]{
+//image[startaws67][「閲覧モード」に戻ったら「:wq」と入力してEnterキーを押せば保存される][scale=0.8]{
 //}
 
 では確認のため、次のコマンドを叩いてみてください。
@@ -165,7 +173,13 @@ ServerRoot@<fn>{serverRoot}ではベースとなるディレクトリを指定�
 </VirtualHost>
 //}
 
-「ServerName」のところが日本語の「www.自分のドメイン」ではなく、ちゃんと自分のドメインに置き換わっているか確認してください。たとえば筆者なら「startdns.fun」というドメインなので「ServerName www.startdns.fun」になっています。もしcatコマンドを叩いたときに「そのようなファイルやディレクトリはありません」と表示されたら設定ファイルが作成できていません。作り直しましょう。
+「ServerName」のところが日本語の「www.自分のドメイン」ではなく、ちゃんと自分のドメインに置き換わっているか確認してください。たとえば筆者なら「startdns.fun」というドメインなので次のようになっています。
+
+//cmd{
+ServerName www.startdns.fun
+//}
+
+もしcatコマンドを叩いたときに「そのようなファイルやディレクトリはありません」と表示されたら設定ファイルが作成できていません。作り直しましょう。
 
 === 設定ファイルの構文チェック
 
@@ -181,18 +195,24 @@ Syntax OK
 
 === ドキュメントルートを作成
 
-ドキュメントルート@<fn>{docRoot}とは「サイトにアクセスしたらここに置いたファイルが表示されるよ」というディレクトリのことです。
+ドキュメントルート@<fn>{docRoot}とは「サイトにアクセスしたらここに置いたファイルが表示されるよ」というディレクトリのことです。つまりバーチャルホストの設定で
 
 //footnote[docRoot][@<href>{https://httpd.apache.org/docs/2.4/ja/mod/core.html#documentroot}]
+
 //cmd{
 DocumentRoot "/var/www/start-aws-documentroot"
 ServerName www.startdns.fun
-と書いてあったら、
-/var/www/start-aws-documentroot/ に置いた「index.html」が
-http://www.startdns.fun/index.html で見られる
 //}
 
-先ほどバーチャルホストの設定で次のように書いたのですが、このディレクトリがまだ存在していないため警告が出てしまっているのです。ですのでこのディレクトリを作成しましょう。
+と書いてあったら、
+
+//cmd{
+/var/www/start-aws-documentroot/
+//}
+
+に置いた「index.html」が@<href>{http://www.startdns.fun/index.html} で見られるということです。
+
+先ほどバーチャルホストの設定で次のように書いたのですが、このディレクトリがまだ存在していないため警告が出てしまっているようです。ですのでこのディレクトリを作成しましょう。
 
 //cmd{
 DocumentRoot "/var/www/start-aws-documentroot"
@@ -237,7 +257,7 @@ i（アイ）を押して「編集モード」に変わったら「AWSをはじ�
 
 書き終わったらESCキーを押して「閲覧モード」に戻り、「:wq」と入力してEnterキーを押して保存しましょう。（@<img>{startaws69}）
 
-//image[startaws69][ESCを押すと「閲覧モード」に戻ったら「:wq」で保存][scale=0.8]{
+//image[startaws69][ESCを押して「閲覧モード」に戻ったら「:wq」で保存][scale=0.8]{
 //}
 
 それではバーチャルホストの設定を有効にするため、apachectlでApacheを再起動しましょう。
@@ -250,10 +270,10 @@ i（アイ）を押して「編集モード」に変わったら「AWSをはじ�
 
 === curlでページを確認しよう
 
-これでバーチャルホストの設定は完了です。バーチャルホストで作った自分のウェブサイトに「ページ見せて」と頼んだら、ちゃんとページを返してくれるのか確認してみましょう。次のようなコマンドを叩いてみてください。ちなみに「www.自分のドメイン」の部分は自分のドメインに置き換えます。たとえば筆者なら「startdns.fun」というドメインなので「www.startdns.fun」にします。
+これでバーチャルホストの設定は完了です。ウェブサーバに「自分のウェブサイトのページ見せて」と頼んだら、ちゃんとウェブページを返してくれるのか確認してみましょう。次のようなコマンドを叩いてみてください。「www.自分のドメイン」の部分は自分のドメインに置き換えます。たとえば筆者なら「startdns.fun」というドメインなので「www.startdns.fun」にします。
 
 //cmd{
-# curl -H "Host:www.自分のドメイン" http://localhost/
+# curl -H "Host:www.自分のドメイン" http://localhost/index.html
 AWSをはじめよう
 //}
 
@@ -261,14 +281,14 @@ AWSをはじめよう
 
 == Route53で自分のサイトのドメインを設定しよう
 
-続いてブラウザでも「http://www.自分のドメイン」を開いてサイトを確認してみましょう。（@<img>{startaws70}）なんと「アクセスしようとしているサイトを見つけられません。」と表示されてしまいました。
+続いてブラウザでも「@<href>{http://www.自分のドメイン}」を開いてサイトを確認してみましょう。（@<img>{startaws70}）するとなんと「アクセスしようとしているサイトを見つけられません。」と表示されてしまいました。
 
 //image[startaws70][ブラウザで「www.自分のドメイン」を開いたらエラーになってしまった][scale=0.8]{
 //}
 
 これはまだ「www.自分のドメイン」というドメイン名とサーバのIPアドレスをつなぐAレコードが存在していないからです。Route53でAレコードを作りましょう。
 
-=== wwwのサブドメインを作ろう
+=== 自分のサイトのドメイン名を作ろう
 
 マネジメントコンソールの左上にある「サービス」から、「ネットワーキング＆コンテンツ配信」の下にある「Route53」（@<img>{startaws71}）をクリックしてください。
 
@@ -280,7 +300,7 @@ Route53ダッシュボードを開いたらDNS managementの「Hosted zones」�
 //image[startaws72][「Hosted zones」をクリック][scale=0.8]{
 //}
 
-Domain Nameの自分のドメイン名（私の場合はstartdns.fun）をクリック（@<img>{startaws73}）します。
+Domain Nameの自分のドメイン名（筆者の場合はstartdns.fun）をクリック（@<img>{startaws73}）します。
 
 //image[startaws73][自分のドメイン名をクリック][scale=0.8]{
 //}
@@ -300,16 +320,43 @@ Nameには「www」、ValueにはElastic IPを入力（@<img>{startaws75}）し�
 //image[startaws76][「www.自分のドメイン名」というAレコードができた][scale=0.8]{
 //}
 
+=== 【ドリル】/（スラッシュ）で終わるURLを開いたときにindex.html以外を返したい
+
+==== 問題
+
+@<href>{http://www.startdns.fun/}を開くとファイル名は指定していないのにindex.htmlが表示されます。このようにファイル名を省略して「/（スラッシュ）」で終わるURLを開いたとき、index.htmlではなくneko.htmlを表示させたかったらApacheの設定ファイル（httpd.conf）でどの設定を書き換えればよいでしょうか？
+
+ * A. DirectorySlashディレクティブ
+ * B. DirectoryIndexディレクティブ
+ * C. Directoryディレクティブ
+
+//raw[|latex|\begin{reviewimage}\begin{flushright}\includegraphics[width=0.5\maxwidth\]{./images/answerColumnShort.png}\end{flushright}\end{reviewimage}]
+
+==== 解答
+
+正解はBです。grepコマンドを使ってApacheの設定ファイル（httpd.conf）で「index.html」を検索してみると、次のような設定が見つかります。
+
+//cmd{
+# grep index.html /etc/httpd/conf/httpd.conf 
+    DirectoryIndex index.html
+//}
+
+DirectoryIndexディレクティブではファイル名を省略して「/（スラッシュ）」で終わるURLを開いたときに返すファイルの名前を指定できます。次のように複数指定した場合は「index.html」「index.php」「index.txt」の順に探して、最初に見つかったものを返します。
+
+//cmd{
+DirectoryIndex index.html index.php index.txt
+//}
+
 === ブラウザでページを見てみよう
 
-Aレコードの追加が終わったら再びブラウザで「http://www.自分のドメイン」を開いてみましょう。（@<img>{startaws77}）今度こそindex.htmlの「AWSをはじめよう」が表示されました。おめでとうございます！
+Aレコードの追加が終わったら再びブラウザで「@<href>{http://www.自分のドメイン}」を開いてみましょう。（@<img>{startaws77}）今度こそindex.htmlの「AWSをはじめよう」が表示されました。おめでとうございます！
 
 //image[startaws77][index.htmlの「AWSをはじめよう」が表示された][scale=0.8]{
 //}
 
 === アクセスログとエラーログの大切さ
 
-画面上は表示されていますが、サーバ側でもアクセスログを確認してみましょう。
+ブラウザ上ではサイトが表示されましたが、サーバ側でもアクセスログを確認してみましょう。
 
 //cmd{
 # tailf /etc/httpd/logs/start-aws-access.log
@@ -330,4 +377,4 @@ tailfコマンド@<fn>{tailf}はファイルの追記を監視できるコマン
 -rw-r--r-- 1 root root    0  9月  4 13:07 /etc/httpd/logs/start-aws-error.log
 //}
 
-たとえばサイトが上手く表示されないとき、アクセスログやエラーログを確認すれば「サーバまでたどり着いていない」のか「サーバにはたどり着いているけれど、ドキュメントルートに置いたPHPファイルのエラーでちゃんとページが出ない」のかといった問題の切り分けができます。上手くいかないときはログを見るようにしましょう。
+たとえばサイトが上手く表示されないとき、アクセスログやエラーログを確認すれば「サーバまでたどり着いていない」のか「サーバにはたどり着いているけれど、ドキュメントルートに置いたPHPファイルのエラーでちゃんとページが出ない」のか、といった問題の切り分けができます。上手くいかないときはログを見るようにしましょう。
