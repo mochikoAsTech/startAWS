@@ -307,4 +307,159 @@ Syntax OK
 //image[startaws127][管理画面が「ダイジェスト認証」と「WordPressの認証」の2段階で守られるようになった][scale=0.8]{
 //}
 
-以上でWordPressのインストールは完了です。お疲れさまでした。
+== 画像をS3に保存する
+
+ところでWordPressで画像をアップすると、画像ファイルはドキュメントルート以下にある「wp-content/uploads」というディレクトリに保存されます。
+
+//cmd{
+/var/www/start-aws-documentroot/wp-content/uploads/
+//}
+
+ですが画像をEC2インスタンス内に直接保存することによって、次のようなデメリットが発生します。
+
+1. アクセス数が増えてきて負荷分散のためウェブサーバの台数を増やしたときに画像が片方のサーバにしか保存されず、もう1台のサーバでは記事内の画像が表示されなくなってしまう
+2. ウェブサーバが壊れてAMI@<fn>{ami}から復元したとき、画像のフォルダがAMIを作った時点まで先祖返りしてしまい、記事内の画像が表示されなくなってしまう
+3. 画像が
+
+//footnote[ami][AMIについては@<chapref>{backup}で解説します。]
+
+そこで台数を増やしたり、サーバを復元したときでも記事内の画像が問題なく表示されるよう、WordPressでアップした画像はインスタンス内に保存するのではなくAmazon S3に保存するようにしましょう。
+
+=== Amazon S3とは？
+
+Amazon S3というのは「Amazon Simple Storage Service」の略で、頭文字のSが3つなのでS3です。シンプルストレージという名前のとおり、S3はDropboxやGoogleクラウドのようにファイルを保存しておけるサービスです。S3は99.999999999%@<fn>{nine}の耐久性をもち、格納できるデータの容量も無制限ですので「ハードディスクが壊れて保存してた写真が全部消えちゃった・・・」「容量がいっぱいになっちゃってこれ以上保存できない！」のようなトラブルとも無縁です。
+
+//footnote[nine][イレブンナインと読みます。格好いい・・・！]
+
+S3に保存した画像ファイルにはすべてURLが付与され、HTTPSでどこからでもアクセスができます。
+
+=== S3アップ用のIAMユーザーを作ろう
+
+WordPressでアップしたファイルをS3に保存するため、先ずはIAMのアクセスキーを発行します。
+
+細かな手順は省略@<fn>{iamAgain}しますが、マネジメントコンソールでIAMダッシュボードを開いて次のような流れでS3アップ専用のIAMユーザーを作成してください。
+
+ 1. s3-upload-groupというIAMグループを作る
+ 2. s3-upload-groupにAmazonS3FullAccessというポリシーをアタッチする
+ 3. s3-upload-userというIAMユーザを作って「アクセスの種類」を「プログラムによるアクセス」にする
+ 4. s3-upload-userをs3-upload-groupに追加する
+
+//footnote[iamAgain][@<chapref>{doTheFirst}でIAMグループとIAMユーザーを作ってポリシーをアタッチしたときとほぼ同じ手順です。違うのはIAMユーザーの「アクセスの種類」が「AWSマネジメントコンソールへのアクセス」ではなく「プログラムによるアクセス」になっているところだけです。]
+
+S3アップ専用のIAMユーザが作成（@<img>{startaws147}）できたら、アクセスキーIDとシークレットアクセスキーをパソコンのメモ帳にメモ@<fn>{keyOnce}しておいてください。この2つはとても大切なものです。他の人に知られるとS3へ無断でファイルをアップされたり、S3にアップしたファイルを消されたりしてしまいますので、@<ttb>{アクセスキーIDとシークレットアクセスキーは絶対に漏らさない}@<fn>{aKey}ようにしてください。
+
+//footnote[keyOnce][シークレットアクセスキーが表示されるのはこの1回きりで以降は絶対に表示されません。もしシークレットアクセスキーをメモし忘れた場合は、いったんアクセスキーを削除して作成しなおしてください。IAMダッシュボードから左メニューの「ユーザー」を開いて、「s3-upload-user」をクリックすると「認証情報」タブの中でアクセスキーの削除や作成ができます。]
+
+//image[startaws147][「アクセスキーID」と「シークレットアクセスキー」をメモしておこう][scale=1]{
+//}
+
+//footnote[aKey][筆者は堂々と本著に載せていますが、勿論このアクセスキーはすでに無効にしてありますのでご安心ください。]
+
+S3アップ専用のIAMユーザが作成できたら、WordPressプラグインのインストールに進みましょう。
+
+=== WordPressにS3を使うためのプラグインを入れよう
+
+WordPressのプラグイン（拡張機能）を使って、記事の画像をS3に保存する設定を行います。使用するプラグインは次の2つです。
+
+ 1. Amazon Web Servicesプラグイン
+ 2. WP Offload S3 Liteプラグイン
+
+==== Amazon Web Servicesプラグイン
+
+「プラグイン」の「新規追加」をクリック（@<img>{startaws144}）して、「プラグインの検索...」と書かれたところに「Amazon Web Services」と入力します。「Amazon Web Services」が表示されたら「今すぐインストール」をクリックします。
+
+//image[startaws144][「Amazon Web Services」を検索して「今すぐインストール」をクリック][scale=0.8]{
+//}
+
+ボタンの表示が「インストール中」の後に「有効化」になったらクリック（@<img>{startaws145}）します。
+
+//image[startaws145][「有効化」になったらクリック][scale=0.8]{
+//}
+
+Amazon Web Servicesプラグインがインストールできたので「Access Keys」をクリック（@<img>{startaws146}）します。
+
+//image[startaws146][Amazon Web Servicesプラグインの「Access Keys」をクリック][scale=0.8]{
+//}
+
+「click here to reveal a form.」をクリックして、先ほど作ったS3アップ専用のIAMユーザである「s3-upload-user」のアクセスキーIDとシークレットアクセスキーを入力します。どちらも入力できたら「Save Changes」をクリックします。
+
+//image[startaws148][アクセスキーIDとシークレットアクセスキーを入力したら「Save Changes」をクリック][scale=0.8]{
+//}
+
+「Settings saved.」と表示されたらAmazon Web Servicesプラグインの設定は完了です。
+
+==== WP Offload S3 Liteプラグイン
+
+「プラグイン」の「新規追加」をクリック（@<img>{startaws149}）して、「プラグインの検索...」と書かれたところに「WP Offload S3 Lite」と入力します。「WP Offload S3 Lite」が表示されたら「今すぐインストール」をクリックします。
+
+//image[startaws149][「WP Offload S3 Lite」を検索して「今すぐインストール」をクリック][scale=0.8]{
+//}
+
+ボタンの表示が「インストール中」の後に「有効化」になったらクリック（@<img>{startaws150}）します。
+
+//image[startaws150][「有効化」になったらクリック][scale=0.8]{
+//}
+
+WP Offload S3 Liteプラグインがインストールできたので「Settings」をクリック（@<img>{startaws151}）します。
+
+//image[startaws151][WP Offload S3 Liteプラグインの「Settings」をクリック][scale=0.8]{
+//}
+
+WordPressでアップした画像を保存しておくための「バケット」と呼ばれる入れ物がS3にまだないので「Create new bucket」をクリック（@<img>{startaws152}）します。
+
+//image[startaws152][バケットがまだないので「Create new bucket」をクリック][scale=0.8]{
+//}
+
+「Bucket Name」に「start-aws-wordpress-bucket」と入力（@<img>{startaws153}）し、「Region」は「Asia Pacific (Tokyo)」を選択したら「Create new bucket」をクリックします。
+
+//image[startaws153][バケットの名前とリージョンを入れて「Create new bucket」をクリック][scale=0.8]{
+//}
+
+「設定を保存しました。」と表示（@<img>{startaws154}）されました。
+
+//image[startaws154][バケットの作成が完了して画像がS3へ保存されるようになった][scale=0.8]{
+//}
+
+下にスクロールして「Force HTTPS」をオン（@<img>{startaws155}）にしたら「Save Changes」をクリックします。@<fn>{https}
+
+//footnote[https][デフォルトだと「ページをHTTPで開いたら画像もHTTPで表示、ページをHTTPSで開いたら画像もHTTPで表示」という設定ですが、「Force HTTPS」をオンにしておくと「画像は常にHTTPSで表示」になります。今後サイトをHTTPS化したときに画像のURLを書き換えなくて済むようオンにしておくことをお勧めします。]	
+
+//image[startaws155][画像は常にHTTPSで表示されるよう「Force HTTPS」をオンにして「Save Changes」をクリック][scale=0.8]{
+//}
+
+「設定を保存しました。」と表示されたらWP Offload S3 Liteプラグインの設定は完了@<fn>{cloudFront}です。
+
+//footnote[cloudFront][WP Offload S3 LiteプラグインはS3ではなくCloudFrontを使う設定にもできるようです。本著では扱いませんがCloudFrontはCDN（Content Delivery Network）のサービスです。CloudFrontを使うと画像や動画などのコンテンツを世界中のCDNサーバを使って配信できるためページやコンテンツが高速で表示されるようになります。]
+
+=== 投稿を試してみよう
+
+画像をS3にアップする設定がされたか、試しに記事を投稿してみましょう。
+
+左メニューの「投稿」から「新規追加」をクリック（@<img>{startaws156}）したら、タイトルに「画像はS3にアップされるようになりました」と入力します。タイトルが入力できたら「メディアを追加」をクリックしてください。
+
+//image[startaws156][タイトルを入力したら「メディアを追加」をクリック][scale=0.8]{
+//}
+
+「ファイルを選択」をクリックして適当な画像を選択したら「投稿に挿入」をクリックします。
+
+//image[startaws157][適当な画像を選択したら「投稿に挿入」をクリック][scale=0.8]{
+//}
+
+「公開」をクリックします。
+
+//image[startaws158][「公開」をクリック][scale=0.8]{
+//}
+
+投稿が公開されたら「投稿を表示」をクリックしてください。
+
+//image[startaws159][「投稿を表示」をクリック][scale=0.8]{
+//}
+
+記事を確認したら画像を右クリックして「画像だけを表示」をクリックします。
+
+//image[startaws160][画像を右クリックして「画像だけを表示」をクリック][scale=0.8]{
+//}
+
+すると画像のURLが「@<href>{https://s3-ap-northeast-1.amazonaws.com/start-aws-wordpress-bucket/wp-content/uploads/2018/09/07182149/circle_cut_color.png}」のようになっているので、WordPressでアップした画像がS3に保存されて記事に挿入されていることが分かります。
+
+以上でWordPressのインストールと設定は完了です。お疲れさまでした。
