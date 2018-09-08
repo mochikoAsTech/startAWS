@@ -827,6 +827,8 @@ Linuxにはグラフィカルモードやシングルユーザモードなどラ
 
 === OSの基本設定をしておこう
 
+==== タイムゾーンの設定
+
 date（デート）コマンドでサーバの時間を確認してみましょう。日本はいま18:14なのですが、サーバの時間は9:14でずれてしまっています。
 
 //cmd{
@@ -892,7 +894,6 @@ UTC=true
 
 ちなみに入力しているパス（path）は入力途中でタブを押すと自動的に補完されるので、全部手打ちしなくても大丈夫です。たとえば
 
-
 //cmd{
 # ln -sf /usr/sh
 //}
@@ -913,6 +914,8 @@ UTC=true
 
 //image[startaws36][シンボリックリンクが生成された][scale=0.8]{
 //}
+
+==== locale（言語）の設定
 
 続いてlocale（言語）の設定をします。今は言語の設定が英語になっているのでエラーメッセージなども英語で表示されますが、分かりやすくするため言語設定を日本語に変更しましょう。
 
@@ -935,6 +938,54 @@ LANG=ja_JP.UTF-8
 # cat /etc/sysconfig/i18n
 LANG=ja_JP.UTF-8
 //}
+
+通常のLinuxサーバであればこの設定だけでいいのですが、Amazon Linuxの場合、AMIからインスタンスを復元@<fn>{restore}すると今修正した「LANG=ja_JP.UTF-8」がそっと元の「LANG=en_US.UTF-8」に戻ってしまいます。
+
+//footnote[restore][「AMIからインスタンスを復元」については@<chapref>{backup}と@<chapref>{balancing}で解説します。]
+
+元に戻らないよう次のファイルも編集しておきましょう。
+
+//cmd{
+# vi /etc/cloud/cloud.cfg
+//}
+
+viコマンドでファイルを開くと、最初は「閲覧モード」になっています。i（アイ）で「編集モード」にして一番下に次の1行を書き足してください。
+
+//cmd{
+locale: ja_JP.UTF-8
+//}
+
+書き終わったらESCキーを押して「閲覧モード」に戻り「:wq」で保存します。編集できたらcatコマンドでファイルの中身を確認してみましょう。
+
+//cmd{
+# cat /etc/cloud/cloud.cfg
+# WARNING: Modifications to this file may be overridden by files in
+# /etc/cloud/cloud.cfg.d
+
+# If this is set, 'root' will not be able to ssh in and they 
+# will get a message to login instead as the default user (ec2-user)
+disable_root: true
+
+# This will cause the set+update hostname module to not operate (if true)
+preserve_hostname: true
+
+datasource_list: [ Ec2, None ]
+
+repo_upgrade: security
+repo_upgrade_exclude:
+ - kernel
+ - nvidia*
+ - cudatoolkit
+
+mounts:
+ - [ ephemeral0, /media/ephemeral0 ]
+ - [ swap, none, swap, sw, "0", "0" ]
+# vim:syntax=yaml
+
+locale: ja_JP.UTF-8
+//}
+
+==== historyの設定
 
 最後にhistoryの設定を行います。historyコマンドを叩くと今まで自分が実行したコマンドの履歴が見られます。
 
