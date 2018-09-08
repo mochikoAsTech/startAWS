@@ -258,6 +258,85 @@ HTTPの「ソース」に書いてある「0.0.0.0/0」を消して、代わり�
 //image[startaws194][ELBを経由する「@<href>{http://www.自分のドメイン名/}」を開いたときはちゃんと表示される][scale=0.8]{
 //}
 
+=== 【ドリル】自宅以外からサイトが見られないようアクセス制限をしたい
+
+==== 問題
+
+「WordPressで作ったブログは自分の勉強ノートとして使いたいので、自宅からしか見えないようにIPアドレスで制限しよう！」と思ったAさんは、EC2のインスタンスでバーチャルホストの設定に
+
+//cmd{
+<Directory "/var/www/start-aws-documentroot">
+    Require all denied
+    Require ip 自宅のIPアドレス
+</Directory>
+//}
+
+と追記してApacheを再起動しました。するとなぜか
+
+ * 自宅からサイトが見られない
+ * 自宅以外の場所からもサイトが見られない
+ * ロードバランサーからのヘルスチェックも通さずインスタンスが死んでいると判断されてしまう
+
+という全拒否状態になってしまったので、慌てて次のように修正してもう一度Apacheを再起動しました。
+
+//cmd{
+<Directory "/var/www/start-aws-documentroot">
+    Require all denied
+    Require ip 自宅のIPアドレス
+    Require ip ロードバランサーのIPアドレス
+</Directory>
+//}
+
+すると今度は
+
+ * 自宅からはサイトが見られる
+ * 自宅以外の場所からもサイトが見られる
+ * ロードバランサーからのヘルスチェックも通す
+
+という全許可状態になってしまいました。いったいどうしてでしょう？どう設定したらAさんの期待する
+
+ * 自宅からはサイトが見られる
+ * 自宅以外の場所からはサイトが見られない
+ * ロードバランサーからのヘルスチェックは通す
+
+という状態になるのでしょうか？
+
+//raw[|latex|\begin{reviewimage}\begin{flushright}\includegraphics[width=0.5\maxwidth\]{./images/answerColumnLong.png}\end{flushright}\end{reviewimage}]
+
+==== 解答
+
+ELBを経由したアクセスの場合、EC2インスタンスから見た「アクセス元」はすべてELBになってしまうため、次のようにロードバランサーのIPアドレスを許可すると結果としてすべてのクライアントからのアクセスを許可することになってしまいます。
+
+//cmd{
+<Directory "/var/www/start-aws-documentroot">
+    Require all denied
+    Require ip 自宅のIPアドレス
+    Require ip ロードバランサーのIPアドレス
+</Directory>
+//}
+
+そこで次のように「RemoteIPHeader X-Forwarded-For」@<fn>{remoteIpHeader}を書き加えると、経由したELBのIPアドレスではなく本当のクライアントのIPアドレスが「アクセス元」として利用されるようになります。
+
+//footnote[remoteIpHeader][@<href>{https://httpd.apache.org/docs/2.4/ja/mod/mod_remoteip.html#remoteipheader}]
+
+//cmd{
+RemoteIPHeader X-Forwarded-For
+
+<Directory "/var/www/start-aws-documentroot">
+    Require all denied
+    Require ip 自宅のIPアドレス
+    Require ip ロードバランサーのIPアドレス
+</Directory>
+//}
+
+これでAさんの期待する
+
+ * 自宅からはサイトが見られる
+ * 自宅以外の場所からはサイトが見られない
+ * ロードバランサーからのヘルスチェックは通す
+
+というアクセス制限が実現できました。でも本当はApacheで制御するよりもELBの手前にいるSecurityGroupで遮断する方が、EC2インスタンスに無駄な働きをさせなくて済むのでお勧めです。
+
 == Auto Scaling
 
 AWS Auto Scaling（オートスケーリング）はサーバの自動拡張・縮小をしてくれるサービスです。アクセスが増えてきてウェブサーバ1台ではさばききれなくなったらAuto Scalingが自動的に追加のサーバを立ててくれますし、アクセス数が落ち着いてきて1台で十分な状態になったら自動的に不要なサーバを削除してくれます。
