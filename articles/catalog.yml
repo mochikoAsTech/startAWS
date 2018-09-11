@@ -16,7 +16,7 @@ CHAPS:
 # ウェブサーバの設定をしよう
   - apacheSetting.re
 
-# DBサーバを立てよう
+# データベースサーバを立てよう
   - database.re
 
 # WordPressでサイトを作ろう
@@ -25,7 +25,7 @@ CHAPS:
 # サーバのバックアップを取っておこう
   - backup.re
 
-# ELBでバランシングやサーバの台数管理をしよう
+# ELBとAuto Scalingで複数台のサーバを運用しよう
   - balancing.re
 
 # もっとAWSについて勉強したい！
