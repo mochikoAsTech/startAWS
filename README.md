@@ -3,6 +3,18 @@
 技術書典5で頒布する「AWSをはじめよう ～AWSによる環境構築を1から10まで～」の原稿管理用リポジトリです。  
 TechBoosterのRe:VIEW用の書籍テンプレートを利用しています。
 
+この本（AWSをはじめよう）は2018年10月8日(月・祝)に池袋サンシャインシティで開催される「技術書典5」というイベントで購入できます。
+
+## 実際に読んだ皆さんの感想・書評はこちら
+* https://mochikoastech.hatenablog.com/entry/2018/09/23/163312
+* https://mochikoastech.hatenablog.com/entry/2018/10/03/000913
+
+## 「AWSをはじめよう」ってどんな本？と気になったら無料サンプルはこちら！
+
+「AWSをはじめよう」の無料試し読みPDFはこちらからダウンロードできます。
+第1章がまるごと＋第2章～第10章も少しずつ入っています。
+* https://mochikoastech.booth.pm/items/1032627
+
 ## AWSをはじめようは「DNSをはじめよう」の続き
 
 「DNSをはじめよう」で自分のドメインを買って、
@@ -10,5 +22,5 @@ Route53をネームサーバとして使うところまでやったので、
 今度は「AWSをはじめよう」でサーバを立てて
 WordPressで自分のサイトを作って公開するところまでやってみましょう。
 
-## 「DNSをはじめよう」の書籍版（紙の本）はBOOTHで販売しています
-* https://mochikoastech.booth.pm/items/881622
+## 前作の「DNSをはじめよう」はBOOTHで販売しています
+* https://mochikoastech.booth.pm/items/812516
